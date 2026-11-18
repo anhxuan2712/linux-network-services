@@ -1,0 +1,16 @@
+# Danh sách các quy tắc tường lửa UFW chuẩn (Port Matrix)
+# Áp dụng:
+#   sudo ufw default deny incoming
+#   sudo ufw default allow outgoing
+
+# 1. SSH Server (Port 22/tcp)
+ufw allow 22/tcp comment 'SSH Remote Management'
+
+# 2. DNS BIND9 (Port 53 TCP & UDP)
+ufw allow 53 comment 'DNS Name Resolution'
+
+# 3. DHCP Server (Port 67/udp)
+ufw allow 67/udp comment 'DHCP Server Inbound'
+
+# 4. Nginx Web Server (Port 80/tcp)
+ufw allow 80/tcp comment 'HTTP Web Server'

@@ -1,0 +1,30 @@
+# Hệ điều hành & IDE
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Máy ảo & Ảo hóa (VMware / VirtualBox)
+*.iso
+*.vmdk
+*.vmem
+*.vmsn
+*.vmss
+*.nvram
+*.vbox
+*.vbox-prev
+*.vdi
+*.ova
+*.ovf
+
+# Log & File tạm
+*.log
+*.tmp
+*.bak
+
+# Microsoft Office temporary files
+~$*.docx
+~$*.pptx
+~$*.xlsx

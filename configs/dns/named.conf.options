@@ -1,0 +1,18 @@
+// Cấu hình chuyển tiếp và quyền truy vấn DNS
+// Vị trí trên Server: /etc/bind/named.conf.options
+
+options {
+    directory "/var/cache/bind";
+
+    // Cho phép Client trong mạng 192.168.10.0/24 truy vấn
+    allow-query { localhost; 192.168.10.0/24; };
+
+    // DNS chuyển tiếp ra ngoài Internet khi cần
+    forwarders {
+        8.8.8.8;
+        8.8.4.4;
+    };
+
+    dnssec-validation auto;
+    listen-on-v6 { any; };
+};

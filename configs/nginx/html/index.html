@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Dịch Vụ Mạng Doanh Nghiệp - Ubuntu Server 24.04 LTS</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background: #f0f2f5; color: #1c1e21; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 40px; }
+        .header { text-align: center; border-bottom: 2px solid #e4e6eb; padding-bottom: 24px; margin-bottom: 30px; }
+        .header h1 { font-size: 26px; color: #1877f2; margin-bottom: 8px; }
+        .header p { font-size: 15px; color: #65676b; }
+        .badge { display: inline-block; background: #e7f3ff; color: #1877f2; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-top: 10px; }
+        .section-title { font-size: 18px; margin-bottom: 16px; color: #050505; border-left: 4px solid #1877f2; padding-left: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .card { background: #f7f8fa; border: 1px solid #e4e6eb; border-radius: 8px; padding: 16px; }
+        .card h3 { font-size: 15px; color: #050505; margin-bottom: 6px; }
+        .card p { font-size: 13px; color: #65676b; line-height: 1.4; }
+        .services-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 32px; }
+        .services-list li { background: #f0f8ff; border: 1px solid #cce5ff; border-radius: 6px; padding: 12px; font-size: 14px; }
+        .services-list li strong { color: #004085; }
+        .footer { text-align: center; border-top: 1px solid #e4e6eb; padding-top: 20px; font-size: 13px; color: #8a8d91; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>HỆ THỐNG DỊCH VỤ MẠNG DOANH NGHIỆP</h1>
+            <p>Môn học: Hệ Điều Hành Mạng • Nền tảng: Ubuntu Server 24.04 LTS</p>
+            <div class="badge">Trang thông tin nội bộ: web.lab.local (192.168.10.10)</div>
+        </div>
+
+        <h2 class="section-title">Các Dịch Vụ Mạng Cốt Lõi</h2>
+        <ul class="services-list">
+            <li><strong>OpenSSH Server (Port 22):</strong> Quản trị dòng lệnh từ xa an toàn</li>
+            <li><strong>DHCP Server (Port 67/UDP):</strong> Cấp phát IP tự động (192.168.10.100 - 150)</li>
+            <li><strong>DNS BIND9 (Port 53):</strong> Phân giải thuận nghịch miền lab.local</li>
+            <li><strong>Nginx Web Server (Port 80):</strong> Cổng thông tin doanh nghiệp nội bộ</li>
+            <li><strong>UFW Firewall:</strong> Kiểm soát truy cập đặc quyền tối thiểu (Least Privilege)</li>
+        </ul>
+
+        <h2 class="section-title">Thành Viên Nhóm Triển Khai</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>1. Nguyễn Anh Xuân (Leader)</h3>
+                <p>Nền tảng OS, OpenSSH, Tích hợp hệ thống & Demo</p>
+            </div>
+            <div class="card">
+                <h3>2. Nguyễn Phúc Vượng</h3>
+                <p>Dịch vụ DHCP Server cấp phát IP tự động</p>
+            </div>
+            <div class="card">
+                <h3>3. Nguyễn Minh Trí</h3>
+                <p>Dịch vụ DNS BIND9 & Máy chủ Web Nginx</p>
+            </div>
+            <div class="card">
+                <h3>4. Nguyễn Thành Đạt</h3>
+                <p>Tường lửa UFW, An toàn hệ thống & Slide</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 Nhóm Nghiên Cứu Hệ Điều Hành Mạng - Đề Tài Ubuntu Server 24.04 LTS
+        </div>
+    </div>
+</body>
+</html>

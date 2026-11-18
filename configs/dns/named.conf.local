@@ -1,0 +1,12 @@
+// Khai báo Forward và Reverse Zone cho mạng lab.local
+// Vị trí trên Server: /etc/bind/named.conf.local
+
+zone "lab.local" {
+    type master;
+    file "/etc/bind/zones/db.lab.local";
+};
+
+zone "10.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/zones/db.10.168.192";
+};

@@ -1,0 +1,17 @@
+; Reverse Lookup Zone cho 192.168.10.0/24
+; Vị trí trên Server: /etc/bind/zones/db.10.168.192
+$TTL    604800
+@       IN      SOA     ns.lab.local. admin.lab.local. (
+                              3         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+; Name Servers
+@       IN      NS      ns.lab.local.
+
+; PTR Records (Phân giải ngược)
+10      IN      PTR     ns.lab.local.
+10      IN      PTR     server.lab.local.
+10      IN      PTR     web.lab.local.
