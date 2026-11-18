@@ -217,6 +217,7 @@ Network-Operating-System-Ubuntu-Server/
 ├── README.md                       # Tài liệu hướng dẫn quy trình và tổng quan đề tài
 │
 ├── docs/                           # Tài liệu quản lý, thiết kế và hướng dẫn dịch vụ
+│   ├── 00-nghien-cuu-co-so-ly-thuyet.md # Báo cáo nghiên cứu cơ sở lý thuyết 4 module (Cả nhóm)
 │   ├── 01-server-setup-guide.md    # Hướng dẫn cài đặt Ubuntu Server & SSH (TV1)
 │   ├── 02-dhcp-service-guide.md    # Hướng dẫn cấu hình DHCP Server (TV2)
 │   ├── 03-dns-service-guide.md     # Hướng dẫn cấu hình DNS BIND9 (TV3)
