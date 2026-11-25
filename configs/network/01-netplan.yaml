@@ -1,19 +1,11 @@
-# Cấu hình IP tĩnh cho Ubuntu Server 24.04 LTS
-# Vị trí trên Server: /etc/netplan/01-netcfg.yaml hoặc 50-cloud-init.yaml
+# Cấu hình IP tĩnh cho Ubuntu Server 24.04 LTS (2 card mạng: NAT + Host-Only)
+# Vị trí trên Server: /etc/netplan/01-netcfg.yaml
 network:
   version: 2
-  renderer: networkd
   ethernets:
-    ens33: # Đổi thành tên card mạng thực tế (vd: ens33, enp0s3)
-      dhcp4: no
+    enp2s0: # Card Share with my Mac (NAT) - giữ DHCP để có Internet cài gói apt
+      dhcp4: true
+    enp10s0: # Card Private to my Mac (Host-Only) - IP tĩnh nội bộ
+      dhcp4: false
       addresses:
         - 192.168.10.10/24
-      routes:
-        - to: default
-          via: 192.168.10.1
-      nameservers:
-        addresses:
-          - 192.168.10.10
-          - 8.8.8.8
-        search:
-          - lab.local

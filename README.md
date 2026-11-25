@@ -117,8 +117,13 @@ Dự án được phân bổ khoa học thành 4 module độc lập nhưng liê
   ```bash
   ip a && ip route
   sudo systemctl status ssh
-  ssh user@192.168.10.10
+  ssh anhxuan-devops@192.168.10.10
   ```
+* **Quy trình thực tế đã triển khai (Giai đoạn 2 — để các thành viên nắm rõ hạ tầng):**
+  1. **Mạng ảo (VMware Fusion):** Server dùng 2 card (`enp2s0` NAT để cài gói `apt`, `enp10s0` *Private to my Mac* làm mạng nội bộ `192.168.10.0/24`); Client chỉ dùng 1 card (`Private to my Mac`) để tránh xung đột Gateway/DNS.
+  2. **IP tĩnh Netplan (`/etc/netplan/01-netcfg.yaml`):** Sao lưu config cũ vào `/etc/netplan/backup/`, giữ `enp2s0` chạy `dhcp4: true`, gắn `enp10s0` IP tĩnh `192.168.10.10/24` (không gắn default route lên `enp10s0` để tránh đụng Internet của NAT), sau đó `sudo chmod 600` và `sudo netplan apply`.
+  3. **Bảo mật OpenSSH (`/etc/ssh/sshd_config.d/01-lab-security.conf`):** Tạo file cấu hình phụ gồm `Port 22`, `PermitRootLogin no` (cấm đăng nhập thẳng bằng root), `MaxAuthTries 5` (chống dò mật khẩu), `PasswordAuthentication yes` (phục vụ demo), kiểm tra bằng `sudo sshd -t` và bật `ssh.service`.
+  4. **Kiểm thử từ Client:** Đặt IP tạm `192.168.10.20/24` trên Client (trước khi có DHCP của TV2) để `ping` và `ssh anhxuan-devops@192.168.10.10`. *(Xem chi tiết từng bước tại `docs/01-server-setup-guide.md`)*.
 
 ---
 
@@ -272,9 +277,9 @@ Network-Operating-System-Ubuntu-Server/
 
 | Test ID | Tên bài kiểm thử | Thao tác thực hiện | Kết quả mong đợi | Người kiểm tra | Trạng thái |
 |:---:|---|---|---|:---:|:---:|
-| **TC-01** | IP tĩnh Server | Chạy `ip a show dev <iface>` | Server có đúng IP `192.168.10.10/24` | TV1 | [ ] Pass |
-| **TC-02** | Trạng thái SSH | Chạy `sudo systemctl status ssh` | Trạng thái `active (running)`, Port 22 | TV1 | [ ] Pass |
-| **TC-03** | Đăng nhập SSH từ xa | Trên Client gõ: `ssh user@192.168.10.10` | Đăng nhập thành công vào Terminal Server | TV1 | [ ] Pass |
+| **TC-01** | IP tĩnh Server | Chạy `ip a show dev <iface>` | Server có đúng IP `192.168.10.10/24` | TV1 | [x] Pass |
+| **TC-02** | Trạng thái SSH | Chạy `sudo systemctl status ssh` | Trạng thái `active (running)`, Port 22 | TV1 | [x] Pass |
+| **TC-03** | Đăng nhập SSH từ xa | Trên Client gõ: `ssh anhxuan-devops@192.168.10.10` | Đăng nhập thành công vào Terminal Server | TV1 | [x] Pass |
 | **TC-04** | Client xin IP động | Đặt Client nhận DHCP, kích hoạt kết nối | Client nhận IP trong dải `192.168.10.100-150` | TV2 | [ ] Pass |
 | **TC-05** | Bảng cấp phát DHCP | Chạy `cat /var/lib/dhcp/dhcpd.leases` | Ghi nhận MAC Client và IP tương ứng | TV2 | [ ] Pass |
 | **TC-06** | Phân giải thuận DNS | Client chạy `dig web.lab.local +short` | Trả về chính xác địa chỉ `192.168.10.10` | TV3 | [ ] Pass |
@@ -348,9 +353,9 @@ sudo tail -f /var/log/nginx/error.log  # Log lỗi Nginx
 
 ## 10. Checklist Nghiệm thu Dự án
 
-- [ ] Máy ảo Ubuntu Server 24.04 LTS cài đặt hoàn tất, card mạng Host-Only.
-- [ ] IP tĩnh `192.168.10.10/24` cấu hình đúng bằng Netplan, ping thông nội bộ.
-- [ ] Dịch vụ SSH hoạt động, đăng nhập từ xa thành công.
+- [x] Máy ảo Ubuntu Server 24.04 LTS cài đặt hoàn tất, card mạng Host-Only.
+- [x] IP tĩnh `192.168.10.10/24` cấu hình đúng bằng Netplan, ping thông nội bộ.
+- [x] Dịch vụ SSH hoạt động, đăng nhập từ xa thành công.
 - [ ] DHCP Server cấp IP đúng dải 100–150, ghi nhận đầy đủ bảng lease.
 - [ ] DNS BIND9 phân giải thuận/nghịch chính xác tên miền `web.lab.local`.
 - [ ] Nginx Web Server hiển thị trang web giới thiệu nhóm qua tên miền.

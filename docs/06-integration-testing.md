@@ -9,9 +9,9 @@
 
 | Test ID | Tên bài test | Thao tác kiểm tra | Kết quả mong đợi | Phụ trách module | Trạng thái |
 |:---:|---|---|---|:---:|:---:|
-| **TC-01** | IP tĩnh Server | `ip a show dev <iface>` | Server có IP `192.168.10.10/24` | TV1 | [ ] Pass |
-| **TC-02** | Dịch vụ OpenSSH | `sudo systemctl status ssh` | Trạng thái `active (running)`, Port 22 | TV1 | [ ] Pass |
-| **TC-03** | SSH từ xa | Trên Client: `ssh user@192.168.10.10` | Đăng nhập Terminal thành công | TV1 | [ ] Pass |
+| **TC-01** | IP tĩnh Server | `ip a show dev <iface>` | Server có IP `192.168.10.10/24` | TV1 | [x] Pass |
+| **TC-02** | Dịch vụ OpenSSH | `sudo systemctl status ssh` | Trạng thái `active (running)`, Port 22 | TV1 | [x] Pass |
+| **TC-03** | SSH từ xa | Trên Client: `ssh anhxuan-devops@192.168.10.10` | Đăng nhập Terminal thành công | TV1 | [x] Pass |
 | **TC-04** | Client nhận DHCP | Client xin cấp IP động | Client nhận IP `192.168.10.100 - 150` | TV2 | [ ] Pass |
 | **TC-05** | Bảng cấp phát DHCP | `cat /var/lib/dhcp/dhcpd.leases` | Ghi nhận MAC Client và IP cấp | TV2 | [ ] Pass |
 | **TC-06** | Phân giải thuận DNS | Client: `dig web.lab.local +short` | Trả về IP `192.168.10.10` | TV3 | [ ] Pass |
