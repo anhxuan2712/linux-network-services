@@ -1,16 +1,18 @@
-# Danh sách các quy tắc tường lửa UFW chuẩn (Port Matrix)
-# Áp dụng:
-#   sudo ufw default deny incoming
-#   sudo ufw default allow outgoing
+# ========================================================
+# MA TRAN QUY TAC TUONG LUA UFW (LEAST PRIVILEGE POLICY)
+# He thong: Ubuntu Server 24.04 LTS (192.168.10.10/24)
+# Phu trach: TV4 - Nguyen Thanh Dat
+# ========================================================
 
-# 1. SSH Server (Port 22/tcp)
-ufw allow 22/tcp comment 'SSH Remote Management'
+Chinh sach mac dinh:
+- Incoming (Vao) : DEFAULT DENY  (Chan tat ca ket noi vao chua duoc phep)
+- Outgoing (Ra)  : DEFAULT ALLOW (Cho phep may chu chu dong gui goi tin ra)
 
-# 2. DNS BIND9 (Port 53 TCP & UDP)
-ufw allow 53 comment 'DNS Name Resolution'
+Danh sach cac cong mo cho phep (Explicit Allow):
+1. Port 22/tcp  | Inbound | ALLOW | OpenSSH Management (TV1 - Xuan)
+2. Port 53/any  | Inbound | ALLOW | BIND9 DNS Service TCP & UDP (TV3 - Tri)
+3. Port 67/udp  | Inbound | ALLOW | Kea/ISC-DHCP Server Service (TV2 - Vuong)
+4. Port 80/tcp  | Inbound | ALLOW | Nginx Web Server HTTP (TV3 - Tri)
 
-# 3. DHCP Server (Port 67/udp)
-ufw allow 67/udp comment 'DHCP Server Inbound'
-
-# 4. Nginx Web Server (Port 80/tcp)
-ufw allow 80/tcp comment 'HTTP Web Server'
+Tat ca cac port con lai (Telnet 23, SMB 445, MySQL 3306, HTTPS 443, v.v.):
+-> BI CHAN AM THAM (DROP / FILTERED)
