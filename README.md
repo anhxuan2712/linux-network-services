@@ -144,8 +144,13 @@ Dự án được phân bổ khoa học thành 4 module độc lập nhưng liê
   sudo systemctl status isc-dhcp-server
   cat /var/lib/dhcp/dhcpd.leases
   # Trên Client:
-  ip a show dev <interface>
+  ip -4 a show enp2s0
   ```
+* **Quy trình thực tế đã triển khai (Giai đoạn 3):**
+  1. **Cài đặt & gán interface (`/etc/default/isc-dhcp-server`):** Cài gói `isc-dhcp-server` trên Ubuntu Server, cấu hình `INTERFACESv4="enp10s0"` để chỉ lắng nghe trên card mạng nội bộ.
+  2. **Nạp cấu hình DHCP (`/etc/dhcp/dhcpd.conf`):** Khai báo dải `192.168.10.100–150`, Gateway `192.168.10.1`, DNS `192.168.10.10`, domain `lab.local`, lease time `600s/7200s`; kiểm tra cú pháp bằng `sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf` và khởi động dịch vụ.
+  3. **Xử lý xung đột DHCP của VMware Fusion:** Tạo mạng Custom `vmnet2` trong *VMware Fusion $\rightarrow$ Settings $\rightarrow$ Network* (bỏ tích DHCP và NAT của VMware), sau đó chuyển card `enp10s0` của Server và `enp2s0` của Client sang `vmnet2`.
+  4. **Kiểm thử từ Client:** Chạy `nmcli dev disconnect enp2s0 && nmcli dev connect enp2s0` $\rightarrow$ Client nhận đúng IP `192.168.10.100/24` và Server ghi nhận lease trong `/var/lib/dhcp/dhcpd.leases`. *(Xem chi tiết tại `docs/02-dhcp-service-guide.md`)*.
 
 ---
 
@@ -173,9 +178,13 @@ Dự án được phân bổ khoa học thành 4 module độc lập nhưng liê
   sudo nginx -t
   sudo systemctl status bind9 nginx
   # Trên Client:
-  dig @192.168.10.10 web.lab.local +short
-  curl -I http://web.lab.local
+  dig web.lab.local +short
+  wget -S --spider http://web.lab.local
   ```
+* **Quy trình thực tế đã triển khai (Giai đoạn 4):**
+  1. **DNS BIND9 (`/etc/bind/`):** Cài `bind9 bind9utils dnsutils`, cấu hình `named.conf.options` (`allow-query { localhost; 192.168.10.0/24; };`), khai báo `named.conf.local`, tạo `/etc/bind/zones/db.lab.local` (Forward) và `db.10.168.192` (Reverse), kiểm tra bằng `named-checkconf` / `named-checkzone`.
+  2. **Nginx Web Server (`/etc/nginx/`):** Cài `nginx`, nạp trang HTML tại `/var/www/lab.local/html/index.html`, tạo Server Block `/etc/nginx/sites-available/web.lab.local.conf` (gắn `default_server` để cả IP và tên miền đều vào đúng web nhóm), xóa `sites-enabled/default`, kiểm tra `sudo nginx -t` và khởi động lại.
+  3. **Kiểm thử từ Client:** Client tự động dùng DNS `192.168.10.10` (do DHCP cấp) phân giải `web.lab.local` và `dig -x 192.168.10.10`; `wget -S --spider` tới cả `http://192.168.10.10` và `http://web.lab.local` đều trả về `HTTP/1.1 200 OK`. *(Xem chi tiết tại `docs/03-dns-service-guide.md` và `docs/04-nginx-web-guide.md`)*.
 
 ---
 
@@ -280,12 +289,12 @@ Network-Operating-System-Ubuntu-Server/
 | **TC-01** | IP tĩnh Server | Chạy `ip a show dev <iface>` | Server có đúng IP `192.168.10.10/24` | TV1 | [x] Pass |
 | **TC-02** | Trạng thái SSH | Chạy `sudo systemctl status ssh` | Trạng thái `active (running)`, Port 22 | TV1 | [x] Pass |
 | **TC-03** | Đăng nhập SSH từ xa | Trên Client gõ: `ssh anhxuan-devops@192.168.10.10` | Đăng nhập thành công vào Terminal Server | TV1 | [x] Pass |
-| **TC-04** | Client xin IP động | Đặt Client nhận DHCP, kích hoạt kết nối | Client nhận IP trong dải `192.168.10.100-150` | TV2 | [ ] Pass |
-| **TC-05** | Bảng cấp phát DHCP | Chạy `cat /var/lib/dhcp/dhcpd.leases` | Ghi nhận MAC Client và IP tương ứng | TV2 | [ ] Pass |
-| **TC-06** | Phân giải thuận DNS | Client chạy `dig web.lab.local +short` | Trả về chính xác địa chỉ `192.168.10.10` | TV3 | [ ] Pass |
-| **TC-07** | Phân giải nghịch DNS | Client chạy `dig -x 192.168.10.10 +short` | Trả về tên miền `ns.lab.local.` | TV3 | [ ] Pass |
-| **TC-08** | Truy cập Web bằng IP | Mở trình duyệt gõ `http://192.168.10.10` | Nginx trả về trang web demo đề tài | TV3 | [ ] Pass |
-| **TC-09** | Truy cập Web bằng Domain | Mở trình duyệt gõ `http://web.lab.local` | Trang web load thành công qua tên miền | TV3 | [ ] Pass |
+| **TC-04** | Client xin IP động | Đặt Client nhận DHCP, kích hoạt kết nối | Client nhận IP trong dải `192.168.10.100-150` | TV2 | [x] Pass |
+| **TC-05** | Bảng cấp phát DHCP | Chạy `cat /var/lib/dhcp/dhcpd.leases` | Ghi nhận MAC Client và IP tương ứng | TV2 | [x] Pass |
+| **TC-06** | Phân giải thuận DNS | Client chạy `dig web.lab.local +short` | Trả về chính xác địa chỉ `192.168.10.10` | TV3 | [x] Pass |
+| **TC-07** | Phân giải nghịch DNS | Client chạy `dig -x 192.168.10.10 +short` | Trả về tên miền `ns.lab.local.` | TV3 | [x] Pass |
+| **TC-08** | Truy cập Web bằng IP | Mở trình duyệt / `wget` gõ `http://192.168.10.10` | Nginx trả về trang web demo đề tài | TV3 | [x] Pass |
+| **TC-09** | Truy cập Web bằng Domain | Mở trình duyệt / `wget` gõ `http://web.lab.local` | Trang web load thành công qua tên miền | TV3 | [x] Pass |
 | **TC-10** | Chính sách Firewall UFW | Chạy `sudo ufw status verbose` | Chỉ mở 22, 53, 67, 80; chặn mọi port khác | TV4 | [ ] Pass |
 
 ---
@@ -356,9 +365,9 @@ sudo tail -f /var/log/nginx/error.log  # Log lỗi Nginx
 - [x] Máy ảo Ubuntu Server 24.04 LTS cài đặt hoàn tất, card mạng Host-Only.
 - [x] IP tĩnh `192.168.10.10/24` cấu hình đúng bằng Netplan, ping thông nội bộ.
 - [x] Dịch vụ SSH hoạt động, đăng nhập từ xa thành công.
-- [ ] DHCP Server cấp IP đúng dải 100–150, ghi nhận đầy đủ bảng lease.
-- [ ] DNS BIND9 phân giải thuận/nghịch chính xác tên miền `web.lab.local`.
-- [ ] Nginx Web Server hiển thị trang web giới thiệu nhóm qua tên miền.
+- [x] DHCP Server cấp IP đúng dải 100–150, ghi nhận đầy đủ bảng lease.
+- [x] DNS BIND9 phân giải thuận/nghịch chính xác tên miền `web.lab.local`.
+- [x] Nginx Web Server hiển thị trang web giới thiệu nhóm qua tên miền.
 - [ ] Tường lửa UFW kích hoạt, chỉ mở đúng 4 cổng dịch vụ.
 - [ ] Thực hiện đủ 10 Test Cases, có ảnh chụp minh chứng lưu tại `evidence/`.
 - [ ] Báo cáo Word 5 chương hoàn chỉnh, Slide thuyết trình 15–20 trang sẵn sàng.
