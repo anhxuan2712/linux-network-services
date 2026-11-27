@@ -1,0 +1,15 @@
+# Cấu hình Prometheus thu thập thông số tài nguyên Ubuntu Server qua Node Exporter
+# Vị trí trên Server: /etc/prometheus/prometheus.yml
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
