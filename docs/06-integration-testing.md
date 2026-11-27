@@ -18,7 +18,7 @@
 | **TC-07** | Phân giải nghịch DNS | Client: `dig -x 192.168.10.10 +short` | Trả về `ns.lab.local.` | TV3 | [x] Pass |
 | **TC-08** | Truy cập Web qua IP | Trình duyệt / `wget`: `http://192.168.10.10` | Hiển thị website nội bộ | TV3 | [x] Pass |
 | **TC-09** | Truy cập Web qua Domain| Trình duyệt / `wget`: `http://web.lab.local` | Hiển thị website nội bộ | TV3 | [x] Pass |
-| **TC-10** | Tường lửa UFW | `sudo ufw status verbose` | Chỉ mở 22, 53, 67, 80; chặn cổng lạ | TV4 | [ ] Pass |
+| **TC-10** | Tường lửa UFW | `sudo ufw status verbose` | Chỉ mở 22, 53, 67, 80; chặn cổng lạ | TV4 | [x] Pass |
 
 ---
 

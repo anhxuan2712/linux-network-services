@@ -295,7 +295,7 @@ Network-Operating-System-Ubuntu-Server/
 | **TC-07** | Phân giải nghịch DNS | Client chạy `dig -x 192.168.10.10 +short` | Trả về tên miền `ns.lab.local.` | TV3 | [x] Pass |
 | **TC-08** | Truy cập Web bằng IP | Mở trình duyệt / `wget` gõ `http://192.168.10.10` | Nginx trả về trang web demo đề tài | TV3 | [x] Pass |
 | **TC-09** | Truy cập Web bằng Domain | Mở trình duyệt / `wget` gõ `http://web.lab.local` | Trang web load thành công qua tên miền | TV3 | [x] Pass |
-| **TC-10** | Chính sách Firewall UFW | Chạy `sudo ufw status verbose` | Chỉ mở 22, 53, 67, 80; chặn mọi port khác | TV4 | [ ] Pass |
+| **TC-10** | Chính sách Firewall UFW | Chạy `sudo ufw status verbose` | Chỉ mở 22, 53, 67, 80; chặn mọi port khác | TV4 | [x] Pass |
 
 ---
 
@@ -368,7 +368,7 @@ sudo tail -f /var/log/nginx/error.log  # Log lỗi Nginx
 - [x] DHCP Server cấp IP đúng dải 100–150, ghi nhận đầy đủ bảng lease.
 - [x] DNS BIND9 phân giải thuận/nghịch chính xác tên miền `web.lab.local`.
 - [x] Nginx Web Server hiển thị trang web giới thiệu nhóm qua tên miền.
-- [ ] Tường lửa UFW kích hoạt, chỉ mở đúng 4 cổng dịch vụ.
-- [ ] Thực hiện đủ 10 Test Cases, có ảnh chụp minh chứng lưu tại `evidence/`.
+- [x] Tường lửa UFW kích hoạt, chỉ mở đúng 4 cổng dịch vụ.
+- [x] Thực hiện đủ 10 Test Cases, có ảnh chụp minh chứng lưu tại `evidence/`.
 - [ ] Báo cáo Word 5 chương hoàn chỉnh, Slide thuyết trình 15–20 trang sẵn sàng.
 - [ ] Cả 4 thành viên đều hiểu rõ luồng vận hành và tự tin trả lời phản biện.
