@@ -86,11 +86,39 @@ systemctl is-active prometheus prometheus-node-exporter grafana-server
    * Menu **☰** $\rightarrow$ **Connections** $\rightarrow$ **Data sources** $\rightarrow$ **Add data source** $\rightarrow$ **Prometheus**.
    * Nhập **Prometheus server URL:** `http://localhost:9090`.
    * Bấm **Save & test** $\rightarrow$ xác nhận thông báo xanh **`Successfully queried the Prometheus API.`**
-4. **Import Dashboard mẫu chuẩn doanh nghiệp (ID `1860` — Node Exporter Full):**
+4. **Import Dashboard mẫu (ID `1860` — Node Exporter Full):**
    * Bấm dấu **`+`** (góc trên phải) $\rightarrow$ **Import dashboard**.
    * Nhập ID **`1860`** vào ô *Grafana.com dashboard URL or ID* $\rightarrow$ bấm **Load**.
    * Chọn Data source `prometheus` $\rightarrow$ bấm **Import**.
-5. **Kết quả đạt (TC-11):** Bảng **Node Exporter Full** hiển thị trực tiếp thông số thời gian thực của `ubuntu-server` (`localhost:9100`): CPU Busy %, RAM Used %, Swap, RootFS Used %, CPU Cores, Uptime và các biểu đồ CPU/Memory/Network/Disk.
+
+---
+
+## 4. Hướng dẫn Đọc Dashboard `1860`: CHỈ CẦN CHÚ Ý 6 TÀI NGUYÊN CỐT LÕI NÀO?
+
+Dashboard **Node Exporter Full (ID `1860`)** có rất nhiều biểu đồ chuyên sâu bên dưới; khi quản trị và báo cáo trước Giảng viên, bạn **không cần kéo xuống hết** mà chỉ cần tập trung giải thích đúng **2 cụm đầu tiên (`Quick CPU / Mem / Disk` & `Basic CPU / Mem / Net / Disk`)** với **6 nhóm tài nguyên quan trọng nhất**:
+
+| STT | Ô / Biểu đồ trên Grafana | Ý nghĩa dễ hiểu | Ngưỡng tốt vs Cảnh báo | Lý do cần giám sát trên Ubuntu Server |
+|:---:|---|---|---|---|
+| **1** | **CPU Busy (%)** & **CPU Basic** | Phần trăm CPU đang bận xử lý (`Busy User`: ứng dụng Nginx/Grafana; `Busy System`: nhân Linux xử lý mạng/UFW; `Iowait`: chờ ổ cứng). | **< 50%:** Rất khỏe (Xanh)<br>**> 80%:** Quá tải (Đỏ) | Phát hiện sớm tấn công DDoS, vòng lặp vô hạn hoặc quá tải kết nối Nginx/DNS. |
+| **2** | **Sys Load** *(System Load Average)* | Số tác vụ trung bình đang chờ CPU xử lý (so với **CPU Cores = 4**). | **< 4.0 (số Core):** Nhàn<br>**> 4.0:** Bắt đầu nghẽn cổ chai | Cho biết hệ thống có đang bị xếp hàng chờ xử lý hay không. |
+| **3** | **RAM Used (%)** & **Memory Basic** | Lượng RAM thực sự các dịch vụ đang dùng (tách biệt với `Cache + Buffer` mà Linux tự mượn tạm để tăng tốc đọc ghi). | **< 70%:** An toàn<br>**> 85%:** Nguy cơ hết RAM (OOM) | Đảm bảo 7 dịch vụ (`ssh, dhcp, bind9, nginx, prometheus, grafana`) chạy êm không bị nhân Linux kill tiến trình. |
+| **4** | **SWAP Used (%)** | Tỷ lệ bộ nhớ ảo trên ổ cứng đang phải dùng thay RAM. | **0% – 5%:** Lý tưởng<br>**> 20%:** Thiếu RAM vật lý | Nếu Swap tăng cao nghĩa là RAM vật lý đã cạn, máy chủ sẽ bị chậm/treo rõ rệt. |
+| **5** | **RootFS Used (%)** & **Disk Space Used** | Phần trăm dung lượng phân vùng gốc `/` đã sử dụng (hiện ~58.5% / 18 GiB). | **< 80%:** An toàn<br>**> 90%:** Nguy hiểm | **Cực quan trọng:** Nếu đầy 100% ổ cứng, DHCP không ghi được `dhcpd.leases`, Nginx/BIND9 không ghi được log và dịch vụ sẽ sập. |
+| **6** | **Network Traffic Basic** *(Receive / Transmit)* | Lưu lượng gói tin đi vào (RX) và đi ra (TX) trên card mạng `enp10s0` theo thời gian thực. | Ổn định theo lưu lượng Client; tăng vọt bất thường là dấu hiệu quét cổng / flood | Quan sát trực tiếp lưu lượng mạng khi Client truy cập web, truy vấn DNS hoặc SSH. |
+
+> **Thông số bổ trợ ở cụm góc phải:** **CPU Cores** (`4`), **RAM Total** (`5 GiB`), **RootFS Total** (`18 GiB`), và **Uptime** (thời gian máy chủ hoạt động liên tục không bị tắt/crash — thước đo độ ổn định của Server).
+
+---
+
+## 5. Mẹo Tạo Tải Giả Lập Cho Biểu Đồ Nhảy Trực Tiếp Khi Demo (Ăn điểm tuyệt đối!)
+
+Để chứng minh với Giảng viên đây là **dữ liệu thời gian thực (Real-time)** chứ không phải ảnh tĩnh:
+1. Trên góc trên bên phải Grafana, đổi khung thời gian từ `Last 24 hours` $\rightarrow$ **`Last 5 minutes`** và bấm mũi tên cạnh nút Refresh chọn **`5s`**.
+2. Trong Terminal của **Ubuntu Server**, chạy lệnh tạo tải CPU giả lập đúng 15 giây rồi tự dừng (an toàn 100%, không làm treo máy):
+   ```bash
+   timeout 15 sh -c 'yes > /dev/null & yes > /dev/null & wait'
+   ```
+3. Nhìn lên màn hình chiếu Grafana: chỉ sau 5–15 giây, đồng hồ **CPU Busy** và đồ thị **CPU Basic** sẽ **vọt lên ~50% rồi tự hạ xuống lại ~5–10%** ngay trước mắt thầy cô!
 
 ---
 
