@@ -22,7 +22,7 @@ Xây dựng một hệ thống mạng máy chủ – máy trạm hoàn chỉnh, 
 
 ### 1.2. Phạm vi giới hạn
 - **Phần bắt buộc:** Cấu hình mạng tĩnh Netplan, OpenSSH, DHCP Server (Kea/ISC-DHCP), DNS BIND9, Nginx Web Server, Tường lửa UFW, kiểm thử tích hợp 10 Test Cases.
-- **Phần mở rộng (nếu còn thời gian):** Cấu hình bảo mật SSH bằng cặp khóa Public/Private Key, bật HTTPS nội bộ với chứng chỉ tự ký (Self-signed Certificate), sao lưu cấu hình tự động bằng Shell script.
+- **Phần mở rộng (đã triển khai bổ sung):** Giám sát tài nguyên máy chủ tập trung theo thời gian thực bằng **Prometheus + Node Exporter + Grafana** (Dashboard ID `1860`), phân giải qua DNS `monitor.lab.local` và chạy qua **Nginx Reverse Proxy** (`http://monitor.lab.local` trên Port 80, không mở thêm cổng UFW).
 
 ---
 
